@@ -327,7 +327,7 @@ tbl_names_female_top_25 <- tbl_names |>
   # Summarize total number of births
   summarize(nb_births = sum(nb_births), .groups = "drop") |>
   # Remove column nb_births
-  
+
   # Filter only Females
   filter(sex == "F") |>
   # Slice top 25 rows
@@ -344,13 +344,13 @@ Let us join `tbl_names_extended` with `tbl_names_female_top_25` so that we only 
 ```{r tbl-names-extended-age}
 tbl_names_extended_age <- tbl_names_extended |> 
   # Inner join the `tbl_names_female_top_25` table by `sex` and `name`
-  
+  inner_join(tbl_names_female_top_25) |>
   # Group by name and sex
-   
+   group_by(name, sex) |>
   # Estimate age stats
   estimate_age_stats() |> 
   # Arrange the data based on median age
-   
+  arrange(age_median) |>
   # Clean the names
   janitor::clean_names()
 
@@ -364,25 +364,25 @@ tbl_names_extended_age |>
   # Reorder name based on descending median age 
   mutate(name = fct_reorder(name, desc(age_median))) |> 
   # Initialize a ggplot of age_median vs. name
-  
+  ggplot(aes(x = age_median, y = name)) +
   # Add a segment layer: x = x25_percent, xend = x75_percent and y_end = name
   geom_segment(
     aes(
-      x = ___,
-      xend = ___, 
-      yend = ___
+      x = x25_percent,
+      xend = x75_percent, 
+      yend = name
     ),
-    color = ""___"",
+    color = "orange",
     linewidth = 5
   ) +
   # Add a point layer:
-  geom_point(size = 2, color = ""___"") +
+  geom_point(size = 2, color = "red") +
   # Add labels (title, subtitle, x, y)
   labs(
-    title = "___",
-    subtitle = "___",
-    x = "___",
-    y = "___"
+    title = "Median Ages for Females With the 25 Most Common Names",
+    subtitle = "Among Americans estimaes to be alive",
+    x = "Age",
+    y = "Name"
   ) +
   # Update theme to clean up visual appearance of the plot
   theme(
