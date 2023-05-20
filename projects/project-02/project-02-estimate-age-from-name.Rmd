@@ -323,20 +323,20 @@ Let us now get the top 25 most popular names for Females.
 # Create `tbl_names_female_top_25` with name and sex for top 25 females
 tbl_names_female_top_25 <- tbl_names |>
   # Group by sex and name
-  
+  group_by(sex, name) |>
   # Summarize total number of births
-  
+  summarize(nb_births = sum(nb_births), .groups = "drop") |>
   # Remove column nb_births
   
   # Filter only Females
-
+  filter(sex == "F") |>
   # Slice top 25 rows
-  
+  slice_max(nb_births, n = 25) |>
   # Select name and sex
-  
+  select(name, sex)
 
 # Print `tbl_names_female_top_25`
-
+tbl_names_female_top_25
 ```
 
 Let us join `tbl_names_extended` with `tbl_names_female_top_25` so that we only keep rows corresponding to the top 25 female names.
